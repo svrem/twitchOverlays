@@ -5,12 +5,14 @@ import {
   TextField,
   Button,
   Typography,
+  Divider,
 } from "@material-ui/core";
+import EmailLogin from "../components/emailLogin";
 import { makeStyles } from "@material-ui/core/styles";
+import { useState } from "react";
 import firebase from "firebase/app";
 import "firebase/auth";
 import initFirebase from "../services/firebase";
-import { useState } from "react";
 
 initFirebase();
 
@@ -57,6 +59,27 @@ const useStyles = makeStyles({
   loading: {
     zIndex: 100,
   },
+  Divider: {
+    marginTop: 20,
+    width: "calc(100% + 60px)",
+    left: 0,
+    right: 0,
+    // background:"",
+    transform: "translateX(-30px)",
+    margin: "auto",
+  },
+  or: {
+    background: "blue",
+    width: "max-content",
+    padding: "0px 20px",
+    textAlign: "center",
+    right: 0,
+    left: 0,
+    margin: "auto",
+    transform: "translateY(-14px)",
+    background: "#323232",
+    height: 40,
+  },
 });
 
 const index = () => {
@@ -98,53 +121,15 @@ const index = () => {
         <CircularProgress />
       </Backdrop>
       <Card className={classes.root}>
-        <form
-          onSubmit={handleSubmit}
-          className={classes.form}
-          autoComplete="off"
-        >
-          <TextField
-            required
-            name="email"
-            type="email"
-            InputLabelProps={{
-              style: { color: "grey" },
-            }}
-            className={classes.input}
-            InputProps={{
-              style: { color: "white" },
-            }}
-            id="outlined-basic"
-            label="Email"
-            variant="outlined"
-          />
-          <TextField
-            className={classes.input}
-            InputLabelProps={{
-              style: { color: "grey" },
-            }}
-            InputProps={{
-              style: { color: "white" },
-            }}
-            required
-            name="password"
-            type="password"
-            id="outlined-basic"
-            label="Password"
-            variant="outlined"
-          />
-          <Typography className={classes.errorMessage} variant="subtitle1">
-            {errorMessage}
-          </Typography>
-          <Button
-            type="submit"
-            className={classes.button}
-            variant="contained"
-            color="primary"
-          >
-            Log in
-          </Button>
-        </form>
+        <EmailLogin
+          classes={classes}
+          handleSubmit={handleSubmit}
+          errorMessage={errorMessage}
+        />
+        <Divider className={classes.Divider} />
+        <Typography variant="subtitle1" className={classes.or}>
+          or sign in with
+        </Typography>
       </Card>
     </>
   );

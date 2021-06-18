@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import axios from "axios";
 import {
@@ -9,6 +9,11 @@ import {
 } from "@material-ui/core";
 import Channels from "../components/channels";
 import Table from "../components/TableTest";
+import firebase from "firebase/app";
+import "firebase/auth";
+import initFirebase from "../services/firebase";
+
+initFirebase();
 
 const useStyles = makeStyles({
   channels: {
@@ -72,6 +77,21 @@ const checkIfIn = (name, channels) => {
   return bad;
 };
 
+const getChannels = async () => {
+  try {
+    const id = await firebase.auth().currentUser.getIdToken();
+    const res = await axios.get(
+      "../api/getChannels",
+
+      {
+        headers: {
+          Authorization: id,
+        },
+      }
+    );
+  } catch {}
+};
+
 export default function Hook() {
   const classes = useStyles();
 
@@ -79,6 +99,15 @@ export default function Hook() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+
+  firebase.auth().onAuthStateChanged((user) => {
+    if (user) {
+      console.log(user);
+      getChannels();
+    } else {
+      console.log("no user");
+    }
+  });
 
   const deleteChannel = (row) => {
     let copy = [...channels];
@@ -116,6 +145,10 @@ export default function Hook() {
 
     setLoading(false);
   };
+
+  // useEffect(() => {
+  //   getChannels();
+  // }, []);
 
   return (
     <>
