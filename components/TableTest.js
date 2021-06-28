@@ -72,9 +72,9 @@ const TableTest = ({ rows, deleteChannel }) => {
                 {/* <Button variant="contained" color="primary">
                   Select
                 </Button> */}
-                <IconButton variant="contained" style={{ color: "white" }}>
+                {/* <IconButton variant="contained" style={{ color: "white" }}>
                   <Edit />
-                </IconButton>
+                </IconButton> */}
                 <IconButton
                   onClick={() => deleteChannel(row)}
                   color="default"

@@ -10,7 +10,8 @@ export default class MyDocument extends Document {
         <Head>
           {/* PWA primary color */}
           {/* <meta name="theme-color" content={theme.palette.primary.main} /> */}
-          <title>Twitch Layover</title>
+          {/* <link rel="icon" type="image/x-icon" href="public/favicon2.ico" /> */}
+
           <meta
             name="description"
             content="Website for unique twitch overlay. Easy to use and made by the community."

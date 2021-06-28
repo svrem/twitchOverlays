@@ -4,12 +4,15 @@ import {
   CircularProgress,
   TextField,
   Button,
+  Link,
   Typography,
   Divider,
 } from "@material-ui/core";
+import { useRouter } from "next/router";
 import EmailLogin from "../components/emailLogin";
 import { makeStyles } from "@material-ui/core/styles";
 import { useState } from "react";
+import appDrawer from "../components/appDrawer";
 import firebase from "firebase/app";
 import "firebase/auth";
 import initFirebase from "../services/firebase";
@@ -36,6 +39,9 @@ const useStyles = makeStyles({
     color: "white",
     "&::before": {
       color: "white",
+    },
+    ":-webkit-autofill": {
+      background: "blue",
     },
   },
   form: {
@@ -80,10 +86,20 @@ const useStyles = makeStyles({
     background: "#323232",
     height: 40,
   },
+  signUpLink: {
+    marginTop: 10,
+    width: "calc(100% - 60px)",
+    left: 0,
+    right: 0,
+    margin: "auto",
+  },
 });
 
 const index = () => {
   const classes = useStyles();
+  const router = useRouter();
+
+  const [send, setSend] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -93,18 +109,26 @@ const index = () => {
       .auth()
       .signInWithEmailAndPassword(email, password)
       .then((creds) => {
-        console.log("wow");
         setLoading(false);
       })
       .catch((err) => {
         setLoading(false);
-
+        console.log(err.message);
         setErrorMessage("Email or password is incorrect.");
       });
   };
-  firebase.auth().onAuthStateChanged((user) => {
+  firebase.auth().onAuthStateChanged(async (user) => {
     if (user) {
       // TODO: handle user router
+      if (!user.emailVerified && !send) {
+        setSend(true);
+        user.sendEmailVerification();
+        await firebase.auth().signOut();
+        setErrorMessage("Please verify your email to active your account.");
+        return;
+      } else if (user.emailVerified) {
+        router.push("/channels");
+      }
     }
   });
 
@@ -126,9 +150,12 @@ const index = () => {
           handleSubmit={handleSubmit}
           errorMessage={errorMessage}
         />
-        <Divider className={classes.Divider} />
-        <Typography variant="subtitle1" className={classes.or}>
-          or sign in with
+        <Typography variant="body1" className={classes.signUpLink}>
+          Don't you have account? Sign up{" "}
+          <Link href="signUp" color="primary">
+            here
+          </Link>
+          !
         </Typography>
       </Card>
     </>

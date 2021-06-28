@@ -4,9 +4,14 @@ const checkIfSpace = (e) => {
   e.target.value = e.target.value.replace(" ", "");
 };
 
-const channels = ({ classes, error, errorMessage, handleClick }) => {
+const channels = ({ classes, error, errorMessage, handleSubmit }) => {
   return (
-    <div className={classes.channels}>
+    <form
+      autoComplete="off"
+      spellCheck="false"
+      onSubmit={handleSubmit}
+      className={classes.channels}
+    >
       <TextField
         InputLabelProps={{
           style: { color: error ? "red" : "grey" },
@@ -23,14 +28,15 @@ const channels = ({ classes, error, errorMessage, handleClick }) => {
         name="name"
       />
       <Button
-        onClick={handleClick}
+        // onClick={handleClick}
+        type="submit"
         className={classes.button}
         variant="contained"
         color="primary"
       >
         Add
       </Button>
-    </div>
+    </form>
   );
 };
 
